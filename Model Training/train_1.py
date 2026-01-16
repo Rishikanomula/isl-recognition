@@ -4,7 +4,7 @@
 import os
 import numpy as np
 
-KEYPOINT_DIR = "/path/to/keypoints"
+KEYPOINT_DIR = "C:\Rishika\MajorProject_1\keypoints"
 
 X, y = [], []
 
@@ -27,7 +27,7 @@ y = np.array(y)
 
 
 # 2️⃣ SPLIT DATA
-# ----------------------
+print("Data is being split ")
 from sklearn.model_selection import train_test_split
 
 X_train, X_temp, y_train, y_temp = train_test_split(
@@ -39,12 +39,12 @@ X_val, X_test, y_val, y_test = train_test_split(
 )
 
 
-# 3️⃣ TRAIN MODEL
-# ----------------------
+# TRAIN MODEL
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 
+print("Model Training Started ")
 NUM_CLASSES = len(set(y))
 
 model = Sequential([
@@ -67,3 +67,6 @@ model.fit(
     epochs=50,
     batch_size=32
 )
+
+model.save("isl_keypoint_model.h5")
+print("Model is saved")
