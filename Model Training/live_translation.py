@@ -4,7 +4,7 @@ import tensorflow as tf
 import mediapipe as mp
 import time
 from collections import deque
-
+pred_buffer = deque(maxlen=20)
 # =========================
 # LOAD TRAINED MODEL
 # =========================
@@ -40,7 +40,7 @@ last_char = ""
 last_time = time.time()
 
 # smoothing buffer
-pred_buffer = deque(maxlen=10)
+pred_buffer = deque(maxlen=20)
 
 print("Press C to clear | Q to quit")
 
@@ -49,7 +49,7 @@ while cap.isOpened():
     if not ret:
         break
 
-    # 🔹 FIX 1: mirror correction
+    #FIX 1: mirror correction
     frame = cv2.flip(frame, 1)
 
     image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -70,15 +70,17 @@ while cap.isOpened():
         confidence = np.max(preds)
         idx = np.argmax(preds)
 
-        # 🔹 FIX 2: confidence threshold
-        if confidence > 0.8:
+        # FIX 2: confidence threshold
+        if confidence > 0.85:
             pred_buffer.append(idx)
+            if pred_buffer.count(idx) > 12:
+                current_char = labels[idx]
 
-            # 🔹 FIX 3: temporal smoothing
+            #FIX 3: temporal smoothing
             idx = max(set(pred_buffer), key=pred_buffer.count)
             current_char = labels[idx]
 
-            # 🔹 FIX 4: slow, stable sentence building
+            #FIX 4: slow, stable sentence building
             if (
                     current_char != last_char and
                     time.time() - last_time > 1.5
