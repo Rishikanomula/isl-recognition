@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
 
-img_path = "C:/Rishika/MajorProject_1/Indian/A/0.jpg"  # any image
+img_path = "C:/Rishika/MajorProject_1/Indian/D/0.jpg"  # any image
 
 image = cv2.imread(img_path)
 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

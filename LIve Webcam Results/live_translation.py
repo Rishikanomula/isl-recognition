@@ -7,7 +7,7 @@ from collections import deque
 pred_buffer = deque(maxlen=20)
 
 # LOAD TRAINED MODEL
-model = tf.keras.models.load_model("isl_keypoint_model.h5")
+model = tf.keras.models.load_model("../Model Training/isl_keypoint_model.h5")
 
 # LABELS (MUST MATCH TRAINING ORDER)
 labels = [
