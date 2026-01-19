@@ -5,23 +5,18 @@ import mediapipe as mp
 import time
 from collections import deque
 pred_buffer = deque(maxlen=20)
-# =========================
+
 # LOAD TRAINED MODEL
-# =========================
 model = tf.keras.models.load_model("isl_keypoint_model.h5")
 
-# =========================
 # LABELS (MUST MATCH TRAINING ORDER)
-# =========================
 labels = [
     "1","2","3","4","5","6","7","8","9",
     "A","B","C","D","E","F","G","H","I","J","K","L","M",
     "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
 ]
 
-# =========================
 # MEDIAPIPE HANDS
-# =========================
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(
     static_image_mode=False,
@@ -30,9 +25,6 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.6
 )
 
-# =========================
-# WEBCAM
-# =========================
 cap = cv2.VideoCapture(0)
 
 sentence = ""
