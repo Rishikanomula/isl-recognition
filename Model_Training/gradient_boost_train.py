@@ -1,0 +1,122 @@
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import time
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+
+print("Starting Gradient Boosting Training Pipeline...\n")
+
+# =========================
+# LOAD DATA
+# =========================
+DATASET_PATH = r"C:\Rishika\MajorProject_1\keypoints"
+print("Loading dataset from:", DATASET_PATH)
+
+labels = sorted(os.listdir(DATASET_PATH))
+print("Classes detected:", labels)
+
+label_map = {label: idx for idx, label in enumerate(labels)}
+
+X, y = [], []
+
+for label in labels:
+    print("Loading class:", label)
+    class_path = os.path.join(DATASET_PATH, label)
+
+    for file in os.listdir(class_path):
+        if file.endswith(".npy"):
+            kp = np.load(os.path.join(class_path, file))
+            if kp.shape == (63,):
+                X.append(kp)
+                y.append(label_map[label])
+
+print("Data loading complete")
+
+X = np.array(X, dtype=np.float32)
+y = np.array(y)
+
+print("Dataset shape:", X.shape)
+print("Labels shape :", y.shape)
+
+# =========================
+# NORMALIZATION
+# =========================
+print("\nNormalizing features...")
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
+print("Normalization complete")
+
+# =========================
+# TRAIN / TEST SPLIT
+# =========================
+print("\nSplitting dataset into training and testing...")
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    stratify=y,
+    random_state=42
+)
+
+print("Split complete")
+print("Training samples:", X_train.shape[0])
+print("Testing samples :", X_test.shape[0])
+
+# =========================
+# TRAIN GRADIENT BOOSTING
+# =========================
+print("\nInitializing Gradient Boosting model...")
+model = GradientBoostingClassifier(
+    n_estimators=200,
+    learning_rate=0.1,
+    max_depth=3
+)
+
+print("Training Gradient Boosting model...")
+start_time = time.time()
+
+model.fit(X_train, y_train)
+
+end_time = time.time()
+print("Gradient Boosting training completed")
+print("Training time: {:.2f} seconds".format(end_time - start_time))
+
+# =========================
+# EVALUATION
+# =========================
+print("\nEvaluating model on test data...")
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='weighted')
+recall = recall_score(y_test, y_pred, average='weighted')
+f1 = f1_score(y_test, y_pred, average='weighted')
+
+print("\n===== GRADIENT BOOSTING RESULTS =====")
+print("Accuracy :", round(accuracy, 4))
+print("Precision:", round(precision, 4))
+print("Recall   :", round(recall, 4))
+print("F1 Score :", round(f1, 4))
+
+# =========================
+# CONFUSION MATRIX
+# =========================
+print("\nGenerating confusion matrix...")
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(6,5))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+plt.title("Gradient Boosting Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.tight_layout()
+plt.savefig("GradientBoosting_confusion_matrix.png")
+plt.close()
+
+print("Confusion matrix saved as GradientBoosting_confusion_matrix.png")
+
+print("\nGradient Boosting Training Pipeline Finished Successfully.")
