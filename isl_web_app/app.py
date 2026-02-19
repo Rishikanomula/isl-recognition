@@ -17,7 +17,7 @@ st.set_page_config(
 # =========================
 # PATHS
 # =========================
-MODEL_PATH = "C:\Rishika\MajorProject_1\Model Training\isl_keypoint_model.h5"
+MODEL_PATH = "C:\Rishika\MajorProject_1\Model_Training\isl_keypoint_model.h5"
 KEYPOINT_DIR = "C:\Rishika\MajorProject_1\keypoints"
 
 # =========================
@@ -45,7 +45,7 @@ st.sidebar.write("**Task:** ISL Letters & Numbers Translation")
 st.sidebar.write("**Model:** CNN (Keypoint-based)")
 st.sidebar.write("**Input Features:** 63 hand landmarks")
 st.sidebar.write("**Dataset:** ISL A–Z, 1–9")
-st.sidebar.write("**Test Accuracy:** 99.75%")
+st.sidebar.write("**Test Accuracy:** 94.75%")
 st.sidebar.write("**Frameworks:** TensorFlow, MediaPipe")
 st.sidebar.write("**Deployment:** Streamlit Web App")
 
