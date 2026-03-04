@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISL Letter Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>✋ ISL Letter Recognition</h1>
+            <p>Upload an image of an Indian Sign Language letter and the model will recognize it</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="upload-section">
+                <div class="upload-box" id="uploadBox">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                        <path d="M19 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                        <path d="M1 1v4h4M23 1v4h-4"></path>
+                        <path d="M7 5h10M6 9h12"></path>
+                    </svg>
+                    <h2>Upload Image</h2>
+                    <p>Drag and drop your image here or click to browse</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+                        Choose File
+                    </button>
+                </div>
+
+                <!-- File Input Handler -->
+                <form id="uploadForm" style="display: none;">
+                    <input type="file" name="file" id="file" accept="image/*">
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-container">
+                    <!-- Image Display -->
+                    <div class="image-container">
+                        <img id="uploadedImage" src="" alt="Uploaded Image">
+                    </div>
+
+                    <!-- Prediction Results -->
+                    <div class="prediction-container">
+                        <h2>Recognition Result</h2>
+                        
+                        <div id="errorMessage" class="error-message" style="display: none;"></div>
+                        
+                        <div id="successResult" style="display: none;">
+                            <div class="predicted-letter">
+                                <span class="letter-text" id="predictedLetter">-</span>
+                            </div>
+                            
+                            <div class="confidence-section">
+                                <h3>Confidence</h3>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" id="confidenceFill" style="width: 0%"></div>
+                                </div>
+                                <p class="confidence-text" id="confidenceText">0%</p>
+                            </div>
+
+                            <div class="top-predictions">
+                                <h3>Top 5 Predictions</h3>
+                                <div id="topPredictionsList"></div>
+                            </div>
+                        </div>
+
+                        <div id="loadingSpinner" class="loading" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Analyzing image...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="resetUpload()">Upload Another Image</button>
+                    <button class="btn-secondary" onclick="downloadResult()">Download Result</button>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="info-section">
+                <h3>📊 Model Information</h3>
+                <ul>
+                    <li><strong>Model Type:</strong> CNN with hand keypoints</li>
+                    <li><strong>Input:</strong> Hand images (Indian Sign Language)</li>
+                    <li><strong>Output:</strong> Letter/Number (A-Z, 0-9)</li>
+                    <li><strong>Accuracy:</strong> 94.75%</li>
+                    <li><strong>Supported Characters:</strong> 35 (A-Z + 0-9)</li>
+                </ul>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 ISL Recognition System | Powered by TensorFlow & MediaPipe</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
