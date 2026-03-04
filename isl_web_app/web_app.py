@@ -84,7 +84,7 @@ def extract_keypoints(image_array):
 
 def predict_letter(image_path):
     """
-    Predict the letter from an image.
+    Predict the letter from an image file path.
     
     Args:
         image_path: path to the image file
@@ -92,38 +92,46 @@ def predict_letter(image_path):
     Returns:
         dict with prediction results
     """
+    image = cv2.imread(image_path)
+    return predict_image_array(image)
+
+
+def predict_image_array(image):
+    """
+    Predict the letter from a BGR image array (numpy).
+    Used for both upload and live frames.
+    
+    Returns the same dict structure as ``predict_letter``.
+    """
     if model is None:
         return {'error': 'Model not loaded', 'letter': None, 'confidence': None}
-    
+
+    if image is None:
+        return {'error': 'Invalid image data', 'letter': None, 'confidence': None}
+
     try:
-        # Read image
-        image = cv2.imread(image_path)
-        if image is None:
-            return {'error': 'Could not read image', 'letter': None, 'confidence': None}
-        
         # Extract keypoints
         keypoints = extract_keypoints(image)
-        
+
         # Check if hand was detected
         if np.all(keypoints == 0):
             return {'error': 'No hand detected in image', 'letter': None, 'confidence': None}
-        
+
         # Reshape for model input
         keypoints = keypoints.reshape(1, -1)
-        
+
         # Make prediction
         prediction = model.predict(keypoints, verbose=0)
         confidence = np.max(prediction[0])
         predicted_idx = np.argmax(prediction[0])
         predicted_letter = labels[predicted_idx]
-        
+
         return {
             'error': None,
             'letter': predicted_letter,
             'confidence': float(confidence),
             'all_predictions': {labels[i]: float(prediction[0][i]) for i in range(len(labels))}
         }
-    
     except Exception as e:
         return {'error': str(e), 'letter': None, 'confidence': None}
 
@@ -172,6 +180,34 @@ def predict():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/live')
+def live():
+    """Page that serves the live webcam translator."""
+    return render_template('live.html')
+
+
+@app.route('/predict_frame', methods=['POST'])
+def predict_frame():
+    """
+    Receive a base64-encoded frame and return prediction.
+    Expected JSON body: {"image": "data:image/jpeg;base64,..."}
+    """
+    data = request.get_json(silent=True)
+    if not data or 'image' not in data:
+        return jsonify({'error': 'No image data provided'}), 400
+
+    try:
+        header, encoded = data['image'].split(',', 1)
+        image_bytes = base64.b64decode(encoded)
+        nparr = np.frombuffer(image_bytes, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    except Exception as e:
+        return jsonify({'error': f'Invalid image data: {e}'}), 400
+
+    result = predict_image_array(img)
+    return jsonify(result), 200
+
 
 @app.route('/health', methods=['GET'])
 def health():

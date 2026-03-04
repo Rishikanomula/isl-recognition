@@ -372,6 +372,20 @@ body {
     font-size: 0.9rem;
 }
 
+/* Navigation links */
+.nav-links {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 5px;
+}
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
 /* Animations */
 @keyframes slideDown {
     from {

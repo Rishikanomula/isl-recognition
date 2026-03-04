@@ -103,8 +103,22 @@ curl -X POST -F "file=@image.jpg" http://127.0.0.1:5000/predict
 }
 ```
 
+### POST `/predict_frame`
+Send a base64-encoded frame for live prediction (used by the webcam UI)
+
+**Request (JSON):**
+```json
+{ "image": "data:image/jpeg;base64,..." }
+```
+
+**Response:**
+Same structure as `/predict` but without the `image` field.
+
 ### GET `/`
-Main web page
+Main web page (image upload mode)
+
+### GET `/live`
+Live webcam interface. Access this URL to open the camera-based translator.
 
 ### GET `/health`
 Health check endpoint

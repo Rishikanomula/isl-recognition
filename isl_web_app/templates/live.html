@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISL Live Webcam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* override or narrow specific styling for live page */
+        .camera-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        video {
+            border-radius: 15px;
+            max-width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .hidden-canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Live ISL Translation</h1>
+        </header>
+        <main class="content">
+            <div class="camera-container">
+                <div style="position: relative;">
+                    <video id="video" autoplay playsinline></video>
+                    <div id="overlay" class="overlay">--</div>
+                </div>
+                <canvas id="capture" class="hidden-canvas"></canvas>
+                <div class="controls">
+                    <button id="startBtn" class="btn-primary">Start Camera</button>
+                    <button id="stopBtn" class="btn-secondary" disabled>Stop Camera</button>
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+            <p>&copy; 2024 ISL Recognition System | Webcam mode</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='live.js') }}"></script>
+</body>
+</html>
